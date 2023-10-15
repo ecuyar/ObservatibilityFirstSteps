@@ -1,4 +1,6 @@
-﻿Console.WriteLine("Hello, World!");
+﻿using System.Runtime.CompilerServices;
+
+Console.WriteLine("Hello, World!");
 
 //create OpenTelemetry service
 var traceProvider = Sdk.CreateTracerProviderBuilder()
@@ -10,6 +12,15 @@ var traceProvider = Sdk.CreateTracerProviderBuilder()
 		.AddAttributes(new List<KeyValuePair<string, object>>()
 		{
 			new KeyValuePair<string, object>("host.machineName", Environment.MachineName),
-			 new KeyValuePair<string, object>("host.environment", "dev")
+			new KeyValuePair<string, object>("host.environment", "dev")
 		});
-	}).Build();
+	})
+	.AddConsoleExporter()
+	.Build();
+
+//global http object
+var httpClient = new HttpClient();
+
+//run dummyJson service
+var service = new DummyJsonService(httpClient);
+await service.ParentGetUsers();
