@@ -8,7 +8,9 @@ var traceProvider = Sdk.CreateTracerProviderBuilder()
 	.ConfigureResource(config =>
 	{
 		config
-		.AddService(OpenTelemetryConstants.ServiceName, OpenTelemetryConstants.ServiceVersion)
+		.AddService(
+			serviceName: OpenTelemetryConstants.ServiceName,
+			serviceVersion: OpenTelemetryConstants.ServiceVersion)
 		.AddAttributes(new List<KeyValuePair<string, object>>()
 		{
 			new KeyValuePair<string, object>("host.machineName", Environment.MachineName),
