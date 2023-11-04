@@ -25,7 +25,7 @@
 
 		internal async Task ParentGetUsers()
 		{
-			using var activity = ActivitySourceProvider.Source.StartActivity();
+			using var activity = ActivitySourceProvider.Source.StartActivity(kind: ActivityKind.Producer, name: nameof(ParentGetUsers));
 
 			await GetUsers();
 		}
