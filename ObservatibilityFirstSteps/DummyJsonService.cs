@@ -14,10 +14,16 @@
 
 		private async Task GetUsers()
 		{
+			var tagCollection = new ActivityTagsCollection();
+
 			using var activity = ActivitySourceProvider.Source.StartActivity();
+
+			activity?.AddEvent(new ActivityEvent("API call started.", tags: tagCollection));
 
 			var httpResponse = await _httpClient.GetAsync($"{_baseUrl}/users");
 			var response = await httpResponse.Content.ReadAsStringAsync();
+
+			activity?.AddEvent(new ActivityEvent("API call finished.", tags: tagCollection));
 
 			Console.WriteLine($"{nameof(GetUsers)} Status Code: {httpResponse.StatusCode}");
 			Console.WriteLine($"{nameof(GetUsers)} Return Size: {response.Length} bytes. {Convert.ToDouble(response.Length) / 1_000_000} MB.");
