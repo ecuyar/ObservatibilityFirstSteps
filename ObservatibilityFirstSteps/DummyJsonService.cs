@@ -14,19 +14,28 @@
 
 		private async Task GetUsers()
 		{
-			var tagCollection = new ActivityTagsCollection();
-
 			using var activity = ActivitySourceProvider.Source.StartActivity();
 
-			activity?.AddEvent(new ActivityEvent("API call started.", tags: tagCollection));
+			try
+			{
+				var tagCollection = new ActivityTagsCollection();
 
-			var httpResponse = await _httpClient.GetAsync($"{_baseUrl}/users");
-			var response = await httpResponse.Content.ReadAsStringAsync();
+				activity?.AddEvent(new ActivityEvent("API call started.", tags: tagCollection));
 
-			activity?.AddEvent(new ActivityEvent("API call finished.", tags: tagCollection));
+				var httpResponse = await _httpClient.GetAsync($"{_baseUrl}/users");
+				var response = await httpResponse.Content.ReadAsStringAsync();
 
-			Console.WriteLine($"{nameof(GetUsers)} Status Code: {httpResponse.StatusCode}");
-			Console.WriteLine($"{nameof(GetUsers)} Return Size: {response.Length} bytes. {Convert.ToDouble(response.Length) / 1_000_000} MB.");
+				activity?.AddEvent(new ActivityEvent("API call finished.", tags: tagCollection));
+
+				Console.WriteLine($"{nameof(GetUsers)} Status Code: {httpResponse.StatusCode}");
+				Console.WriteLine($"{nameof(GetUsers)} Return Size: {response.Length} bytes. {Convert.ToDouble(response.Length) / 1_000_000} MB.");
+			}
+			catch (Exception ex)
+			{
+				//set status only in errors
+				activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+			}
+
 		}
 
 		internal async Task ParentGetUsers()
