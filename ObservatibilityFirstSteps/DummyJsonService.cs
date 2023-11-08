@@ -19,6 +19,8 @@
 			using var activity = ActivitySourceProvider.Source.StartActivity();
 
 			activity?.AddEvent(new ActivityEvent("API call started.", tags: tagCollection));
+			activity?.AddTag("request.schema", "https");
+			activity?.AddTag("request.method", "get");
 
 			var httpResponse = await _httpClient.GetAsync($"{_baseUrl}/users");
 			var response = await httpResponse.Content.ReadAsStringAsync();
