@@ -18,14 +18,17 @@
 
 			try
 			{
-				var tagCollection = new ActivityTagsCollection();
+				var eventTags = new ActivityTagsCollection();
 
-				activity?.AddEvent(new ActivityEvent("API call started.", tags: tagCollection));
+				activity?.AddEvent(new ActivityEvent("API call started.", tags: eventTags));
+				activity?.AddTag("request.schema", "https"); //activity tags
+				activity?.AddTag("request.method", "get");
 
 				var httpResponse = await _httpClient.GetAsync($"{_baseUrl}/users");
 				var response = await httpResponse.Content.ReadAsStringAsync();
 
-				activity?.AddEvent(new ActivityEvent("API call finished.", tags: tagCollection));
+				eventTags.Add("response.length", response.Length); //event tag
+				activity?.AddEvent(new ActivityEvent("API call finished.", tags: eventTags));
 
 				Console.WriteLine($"{nameof(GetUsers)} Status Code: {httpResponse.StatusCode}");
 				Console.WriteLine($"{nameof(GetUsers)} Return Size: {response.Length} bytes. {Convert.ToDouble(response.Length) / 1_000_000} MB.");

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ObservatibilityFirstSteps": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
