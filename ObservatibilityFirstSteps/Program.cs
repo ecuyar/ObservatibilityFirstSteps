@@ -1,9 +1,6 @@
-﻿using System.Runtime.CompilerServices;
-
-Console.WriteLine("Hello, World!");
-
-//create OpenTelemetry service
-var traceProvider = Sdk.CreateTracerProviderBuilder()
+﻿//create OpenTelemetry service
+//no data exporting without using block
+using var traceProvider = Sdk.CreateTracerProviderBuilder()
 	.AddSource(OpenTelemetryConstants.ActivitySourceName)
 	.ConfigureResource(config =>
 	{
@@ -13,11 +10,12 @@ var traceProvider = Sdk.CreateTracerProviderBuilder()
 			serviceVersion: OpenTelemetryConstants.ServiceVersion)
 		.AddAttributes(new List<KeyValuePair<string, object>>()
 		{
-			new KeyValuePair<string, object>("host.machineName", Environment.MachineName),
-			new KeyValuePair<string, object>("host.environment", "dev")
+			new("host.machineName", Environment.MachineName),
+			new("host.environment", "dev")
 		});
 	})
 	.AddConsoleExporter()
+	.AddOtlpExporter()
 	.Build();
 
 //global http object
