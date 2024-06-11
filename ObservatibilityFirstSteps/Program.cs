@@ -16,6 +16,7 @@ using var traceProvider = Sdk.CreateTracerProviderBuilder()
 	})
 	.AddConsoleExporter()
 	.AddOtlpExporter()
+	.AddZipkinExporter() //use only one environment. we have two just for demo.
 	.Build();
 
 //global http object
