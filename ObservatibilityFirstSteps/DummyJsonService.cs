@@ -1,6 +1,6 @@
 ﻿namespace ObservatibilityFirstSteps
 {
-	internal class DummyJsonService
+	public class DummyJsonService
 	{
 		private readonly HttpClient _httpClient;
 		private readonly string _baseUrl = "https://dummyjson.com";
@@ -41,11 +41,23 @@
 
 		}
 
-		internal async Task ParentGetUsers()
+		public async Task ParentGetUsers()
 		{
 			using var activity = ActivitySourceProvider.Source.StartActivity(kind: ActivityKind.Producer, name: nameof(ParentGetUsers));
 
 			await GetUsers();
+		}
+
+		public async Task MethodForCustomListener()
+		{
+			using var activity = ActivitySourceProvider.CustomSource.StartActivity();
+
+			activity?.AddEvent(new ActivityEvent("Custom activity event."));
+			activity?.AddTag("CustomActivityTag", "CustomActivityTagValue");
+			activity?.AddTag("CustomActivityTag2", "CustomActivityTagValue2");
+
+			Task.Delay(1000).Wait();
+			await Task.FromResult(99);
 		}
 	}
 }
