@@ -5,5 +5,6 @@
 	internal static class ActivitySourceProvider
 	{
 		public static ActivitySource Source = new(OpenTelemetryConstants.ActivitySourceName);
+		public static ActivitySource CustomSource = new(OpenTelemetryConstants.CustomActivitySourceName);
 	}
 }
