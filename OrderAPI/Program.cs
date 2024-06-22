@@ -24,7 +24,16 @@ builder.Services.AddOpenTelemetry().WithTracing(config =>
 							serviceVersion: openTelemetryConsts.ServiceVersion);
 	});
 
-	config.AddAspNetCoreInstrumentation(); //add instrumentation
+	//add instrumentation
+	config.AddAspNetCoreInstrumentation(opt =>
+	{
+		opt.Filter = context =>
+		{
+			//filter only controller based requests' trace data, not system based requests
+			var pathValue = context.Request.Path.Value;
+			return pathValue is not null && pathValue.Contains("api", StringComparison.InvariantCultureIgnoreCase);
+		};
+	});
 	config.AddConsoleExporter(); //add where to export data
 	config.AddOtlpExporter(); //add where to export data (Jaeger)
 });
