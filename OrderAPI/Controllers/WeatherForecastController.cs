@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace OrderAPI.Controllers
 {
 	[ApiController]
-	[Route("[controller]")]
+	[Route("api/[controller]")] //when we create an API controller, it comes with api prefix
 	public class WeatherForecastController : ControllerBase
 	{
 		private static readonly string[] Summaries = new[]
