@@ -33,6 +33,7 @@ builder.Services.AddOpenTelemetry().WithTracing(config =>
 			var pathValue = context.Request.Path.Value;
 			return pathValue is not null && pathValue.Contains("api", StringComparison.InvariantCultureIgnoreCase);
 		};
+		opt.RecordException = true; //get detailed exception instead of just Exception.Message
 	});
 	config.AddConsoleExporter(); //add where to export data
 	config.AddOtlpExporter(); //add where to export data (Jaeger)
