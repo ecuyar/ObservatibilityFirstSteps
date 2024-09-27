@@ -1,5 +1,6 @@
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using OrderAPI.Middlewares;
 using OrderAPI.OpenTelemetry;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -54,7 +55,11 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 
+//built-in middleware
 app.UseHttpsRedirection();
+
+//custom middleware
+app.UseReadResponseMiddleware();
 
 app.UseAuthorization();
 
