@@ -1,5 +1,7 @@
+using Microsoft.IO;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using OrderAPI.Middlewares;
 using OrderAPI.OpenTelemetry;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddSingleton<RecyclableMemoryStreamManager>();
 
 builder.Services.Configure<OpenTelemetryConsts>(builder.Configuration.GetSection("OpenTelemetry")); //register config data for OpenTelemetry
 var openTelemetryConsts = builder.Configuration.GetSection("OpenTelemetry").Get<OpenTelemetryConsts>();
@@ -54,7 +58,11 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 
+//built-in middleware
 app.UseHttpsRedirection();
+
+//custom middleware
+app.UseReadResponseMiddleware();
 
 app.UseAuthorization();
 
