@@ -8,7 +8,6 @@ namespace OrderAPI.Middlewares
 		private readonly RequestDelegate _next = next;
 		private readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager = recyclableMemoryStreamManager;
 
-
 		public async Task Invoke(HttpContext httpContext)
 		{
 			await RequestBodyObserver(httpContext);
@@ -20,7 +19,7 @@ namespace OrderAPI.Middlewares
 			//request can be read multiple times so buffer it
 			httpContext.Request.EnableBuffering();
 
-			var streamReader = new StreamReader(httpContext.Request.Body);
+			using var streamReader = new StreamReader(httpContext.Request.Body);
 			var requestBody = await streamReader.ReadToEndAsync();
 
 			//save body with a proper tag
@@ -34,7 +33,8 @@ namespace OrderAPI.Middlewares
 			var originalResponse = httpContext.Response.Body;
 
 			await using var memoryStream = _recyclableMemoryStreamManager.GetStream();
-			httpContext.Response.Body = originalResponse;
+			//give body a new stream to read
+			httpContext.Response.Body = memoryStream;
 
 			//let other middlewares continue
 			await _next(httpContext);
@@ -45,7 +45,7 @@ namespace OrderAPI.Middlewares
 
 			//save body with a proper tag
 			Activity.Current?.SetTag("http.response.body", body);
-			//rester reader head
+			//reset reader head
 			memoryStream.Position = 0;
 			await memoryStream.CopyToAsync(originalResponse);
 		}

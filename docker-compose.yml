@@ -1,5 +1,3 @@
-version: '3.4'
-
 services:
   observatibilityfirststeps:
     image: jaegertracing/all-in-one:1.52
