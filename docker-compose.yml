@@ -1,11 +1,11 @@
 services:
   observatibilityfirststeps:
-    image: jaegertracing/all-in-one:1.52
+    image: jaegertracing/all-in-one:1.61.0
     build:
       context: .
       dockerfile: ObservatibilityFirstSteps/Dockerfile
   observatibilityfirststeps-zipkin:
-    image: openzipkin/zipkin:3
+    image: openzipkin/zipkin:latest
     build:
      context: .
      dockerfile: ObservatibilityFirstSteps/Dockerfile-zipkin
