@@ -14,7 +14,8 @@ namespace OrderAPI.Middlewares
 			await ResponseBodyObserver(httpContext);
 		}
 
-		private async Task RequestBodyObserver(HttpContext httpContext)
+		//marked static because of CA1822 warning. (Method doesn't use any instance data)
+		private static async Task RequestBodyObserver(HttpContext httpContext)
 		{
 			//request can be read multiple times so buffer it
 			httpContext.Request.EnableBuffering();

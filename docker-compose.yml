@@ -4,8 +4,8 @@ services:
     build:
       context: .
       dockerfile: ObservatibilityFirstSteps/Dockerfile
-  observatibilityfirststeps-zipkin:
-    image: openzipkin/zipkin:latest
-    build:
-     context: .
-     dockerfile: ObservatibilityFirstSteps/Dockerfile-zipkin
+  # observatibilityfirststeps-zipkin:
+  #   image: openzipkin/zipkin:latest
+  #   build:
+  #    context: .
+  #    dockerfile: ObservatibilityFirstSteps/Dockerfile-zipkin

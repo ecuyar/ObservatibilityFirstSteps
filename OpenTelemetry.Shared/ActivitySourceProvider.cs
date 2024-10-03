@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace OrderAPI.OpenTelemetry
+namespace OpenTelemetry.Shared
 {
 	public static class ActivitySourceProvider
 	{

@@ -1,6 +1,6 @@
-﻿namespace OrderAPI.OpenTelemetry
+﻿namespace OpenTelemetry.Shared
 {
-	public class OpenTelemetryConsts
+	public class OpenTelemetryConstants
 	{
 		public string ServiceName { get; set; } = null!;
 		public string ServiceVersion { get; set; } = null!;
