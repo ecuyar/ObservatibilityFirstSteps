@@ -1,4 +1,3 @@
-version: '3.4'
 services:
   observatibilityfirststeps:
     container_name: "jaeger-container"
@@ -6,7 +5,7 @@ services:
     - 4317:4317     #message over gRPC
     - 4318:4318     #message over HTTP
     - 16686:16686   #jaeger UI
-  observatibilityfirststeps-zipkin:
-    container_name: "zipkin-container"
-    ports:
-    - 9411:9411
+  # observatibilityfirststeps-zipkin:
+  #   container_name: "zipkin-container"
+  #   ports:
+  #   - 9411:9411
