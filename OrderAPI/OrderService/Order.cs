@@ -9,10 +9,10 @@
 		public OrderStatus Status { get; set; }
 
 		//Navigation properties
-		public List<OrderItems> Items { get; set; } = null!;
+		public List<OrderItem> Items { get; set; } = null!;
 	}
 
-	public class OrderItems
+	public class OrderItem
 	{
 		public int Id { get; set; }
 		public int ProductId { get; set; }
