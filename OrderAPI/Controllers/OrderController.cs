@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OrderAPI.OrderService;
 
 namespace OrderAPI.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class OrderController : ControllerBase
+	public class OrderController(OrderService.OrderService orderService) : ControllerBase
 	{
-		[HttpGet("getNumber")]
-		public int GetNumber()
+		[HttpPost]
+		public async Task<IActionResult> Create(CreateOrderRequestDto requestDto)
 		{
-			return new Random().Next(minValue: 0, maxValue: 101);
+			return Ok(await orderService.CreateAsync(requestDto));
 		}
 	}
 }

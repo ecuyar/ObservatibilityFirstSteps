@@ -41,6 +41,18 @@ namespace OpenTelemetry.Shared
 					};
 					options.RecordException = true;  //get detailed exception instead of just Exception.Message
 				});
+
+				//add EF Core instrumentation
+				config.AddEntityFrameworkCoreInstrumentation(options =>
+				{
+					options.SetDbStatementForText = true;
+					options.SetDbStatementForStoredProcedure = true;
+					options.EnrichWithIDbCommand = (activity, dbCommand) =>
+					{
+						//we can add extra info for our db script logs
+					};
+				});
+
 				config.AddConsoleExporter(); //add where to export data
 				config.AddOtlpExporter(); //add where to export data (Jaeger)
 			});

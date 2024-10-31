@@ -20,7 +20,7 @@ namespace OrderAPI.Middlewares
 			//request can be read multiple times so buffer it
 			httpContext.Request.EnableBuffering();
 
-			using var streamReader = new StreamReader(httpContext.Request.Body);
+			var streamReader = new StreamReader(httpContext.Request.Body);
 			var requestBody = await streamReader.ReadToEndAsync();
 
 			//save body with a proper tag
