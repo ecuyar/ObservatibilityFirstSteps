@@ -1,12 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using StockAPI.StockService;
 
 namespace StockAPI.Controllers
 {
-	public class StockController : ControllerBase
+	[Route("api/[controller]")]
+	[ApiController]
+	public class StockController(StockService.StockService stockService) : ControllerBase
 	{
-		public IActionResult Index()
+		[HttpPost(nameof(CheckAndStartPayment))]
+		public IActionResult CheckAndStartPayment(CheckAndPaymentServiceRequestDto requestDto)
 		{
-			return View();
+			var result = stockService.CheckAndPaymentService(requestDto);
+
+			return new ObjectResult(result) { StatusCode = result.StatusCode };
 		}
 	}
 }

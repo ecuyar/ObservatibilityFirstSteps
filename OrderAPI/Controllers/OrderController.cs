@@ -7,7 +7,7 @@ namespace OrderAPI.Controllers
 	[ApiController]
 	public class OrderController(OrderService.OrderService orderService) : ControllerBase
 	{
-		[HttpPost]
+		[HttpPost(nameof(Create))]
 		public async Task<IActionResult> Create(CreateOrderRequestDto requestDto)
 		{
 			return Ok(await orderService.CreateAsync(requestDto));
