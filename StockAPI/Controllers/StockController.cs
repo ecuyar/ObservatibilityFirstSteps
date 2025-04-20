@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using StockAPI.StockService;
+﻿using Common.Shared.Dtos;
+using Microsoft.AspNetCore.Mvc;
 
 namespace StockAPI.Controllers
 {

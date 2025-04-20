@@ -1,4 +1,4 @@
-﻿namespace StockAPI.StockService
+﻿namespace Common.Shared.Dtos
 {
 	public class CheckAndPaymentServiceResponseDto
 	{

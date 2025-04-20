@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using OrderAPI.OrderService;
+﻿using Common.Shared.Dtos;
+using Microsoft.AspNetCore.Mvc;
 
 namespace OrderAPI.Controllers
 {
@@ -10,7 +10,8 @@ namespace OrderAPI.Controllers
 		[HttpPost(nameof(Create))]
 		public async Task<IActionResult> Create(CreateOrderRequestDto requestDto)
 		{
-			return Ok(await orderService.CreateAsync(requestDto));
+			var result = await orderService.CreateAsync(requestDto);
+			return new ObjectResult(result) { StatusCode = result.StatusCode };
 		}
 	}
 }

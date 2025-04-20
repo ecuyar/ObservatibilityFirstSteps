@@ -1,4 +1,4 @@
-﻿using Common.Shared;
+﻿using Common.Shared.Dtos;
 using System.Net;
 
 namespace StockAPI.StockService
@@ -22,7 +22,7 @@ namespace StockAPI.StockService
 
 			foreach (var item in requestDto.OrderItems)
 			{
-				var isExists = productStocklist.Any(x => x.Key == item.ProductId && x.Value > 0);
+				var isExists = productStocklist.Any(x => x.Key == item.ProductId && x.Value - item.Count >= 0);
 
 				stockStatus.Add((item.ProductId, isExists));
 			}

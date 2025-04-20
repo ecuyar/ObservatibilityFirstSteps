@@ -1,4 +1,4 @@
-﻿namespace OrderAPI.OrderService
+﻿namespace Common.Shared.Dtos
 {
 	public record CreateOrderRequestDto
 	{
