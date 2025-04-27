@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common.Shared\Common.Shared.csproj" />
-    <ProjectReference Include="..\OrderAPI\OrderAPI.csproj" />
   </ItemGroup>
 
 </Project>

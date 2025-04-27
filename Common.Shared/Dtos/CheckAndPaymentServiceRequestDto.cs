@@ -1,6 +1,4 @@
-﻿using OrderAPI.OrderService;
-
-namespace StockAPI.StockService
+﻿namespace Common.Shared.Dtos
 {
 	public record CheckAndPaymentServiceRequestDto
 	{

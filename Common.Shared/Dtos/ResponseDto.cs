@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Common.Shared
+namespace Common.Shared.Dtos
 {
 	public class ResponseDto<T>
 	{
