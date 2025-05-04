@@ -53,6 +53,26 @@ namespace OpenTelemetry.Shared
 					};
 				});
 
+				config.AddHttpClientInstrumentation(options =>
+				{
+					options.EnrichWithHttpRequestMessage = async (activity, request) =>
+					{
+						var requestContent = string.Empty;
+
+						//GET requests' body will be null, so we need to control it
+						if (request.Content is not null)
+							requestContent = await request.Content.ReadAsStringAsync();
+
+						activity.SetTag("http.request.body", requestContent);
+					};
+
+					options.EnrichWithHttpResponseMessage = async (activity, response) =>
+					{
+						if (response.Content is not null)
+							activity.SetTag("http.response.body", await response.Content.ReadAsStringAsync());
+					};
+				});
+
 				config.AddConsoleExporter(); //add where to export data
 				config.AddOtlpExporter(); //add where to export data (Jaeger)
 			});
