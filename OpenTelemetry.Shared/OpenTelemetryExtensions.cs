@@ -55,6 +55,8 @@ namespace OpenTelemetry.Shared
 
 				config.AddHttpClientInstrumentation(options =>
 				{
+					//These options can be commented because services have middlewares that log request/response bodies.
+					//Can be used for external service call logs.
 					options.EnrichWithHttpRequestMessage = async (activity, request) =>
 					{
 						var requestContent = string.Empty;
