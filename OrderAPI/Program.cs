@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IO;
 using OpenTelemetry.Shared;
+using OpenTelemetry.Shared.Middlewares;
 using OrderAPI.Context;
-using OrderAPI.Middlewares;
 using OrderAPI.OrderService;
 using OrderAPI.StockServices;
 

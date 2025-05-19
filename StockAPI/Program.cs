@@ -1,3 +1,6 @@
+using Microsoft.IO;
+using OpenTelemetry.Shared;
+using OpenTelemetry.Shared.Middlewares;
 using StockAPI.StockService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +12,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddOpenTelemetryExt(builder.Configuration);
+builder.Services.AddSingleton<RecyclableMemoryStreamManager>();
 
 var app = builder.Build();
 
@@ -20,6 +25,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+//custom middlewares
+app.UseReadResponseMiddleware();
 
 app.UseAuthorization();
 
