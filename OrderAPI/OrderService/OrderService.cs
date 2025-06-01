@@ -1,19 +1,24 @@
 ﻿using Common.Shared.Dtos;
 using OpenTelemetry.Shared;
 using OrderAPI.Context;
+using OrderAPI.RedisServices;
 using OrderAPI.StockServices;
 using System.Diagnostics;
 using System.Net;
+using System.Text.Json;
 
 namespace OrderAPI.OrderService
 {
-	public class OrderService(AppDbContext context, StockService stockService)
+	public class OrderService(AppDbContext context, StockService stockService, RedisService redisService)
 	{
 		public async Task<ResponseDto<CreateOrderResponseDto>> CreateAsync(CreateOrderRequestDto requestDto)
 		{
 			Activity.Current?.SetTag("Asp.Net Core tag1", "Asp.Net Core tag value");
 			using var activity = ActivitySourceProvider.Source.StartActivity();
 			activity?.AddEvent(new("Sipariş süreci başladı."));
+
+			var jsonString = JsonSerializer.Serialize(requestDto);
+			await redisService.SetAsync($"{requestDto.UserId}/order", jsonString);
 
 			var newOrder = await CreateOrderAsync(requestDto);
 

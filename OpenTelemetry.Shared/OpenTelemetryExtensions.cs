@@ -30,7 +30,7 @@ namespace OpenTelemetry.Shared
 							serviceVersion: openTelemetryConstants.ServiceVersion);
 					});
 
-				//add instrumentation
+				//add asp net instrumentation
 				config.AddAspNetCoreInstrumentation(options =>
 				{
 					options.Filter = context =>
@@ -53,6 +53,7 @@ namespace OpenTelemetry.Shared
 					};
 				});
 
+				//add http instrumentation
 				config.AddHttpClientInstrumentation(options =>
 				{
 					//These options can be commented because services have middlewares that log request/response bodies.
@@ -73,6 +74,12 @@ namespace OpenTelemetry.Shared
 						if (response.Content is not null)
 							activity.SetTag("http.response.body", await response.Content.ReadAsStringAsync());
 					};
+				});
+
+				//add redis instrumentation
+				config.AddRedisInstrumentation(option =>
+				{
+					option.SetVerboseDatabaseStatements = true;
 				});
 
 				config.AddConsoleExporter(); //add where to export data

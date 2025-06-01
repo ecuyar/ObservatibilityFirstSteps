@@ -9,3 +9,5 @@ services:
   #   build:
   #    context: .
   #    dockerfile: ObservatibilityFirstSteps/Dockerfile-zipkin
+  redis:
+    image: redis:7.4.4-alpine3.21
