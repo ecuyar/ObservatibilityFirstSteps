@@ -1,10 +1,13 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IO;
 using OpenTelemetry.Shared;
 using OpenTelemetry.Shared.Middlewares;
 using OrderAPI.Context;
 using OrderAPI.OrderService;
+using OrderAPI.RedisServices;
 using OrderAPI.StockServices;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +22,22 @@ builder.Services.AddOpenTelemetryExt(builder.Configuration);
 builder.Services.AddSingleton<RecyclableMemoryStreamManager>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<StockService>();
+builder.Services.AddOptions<RedisSettings>()
+	.Bind(builder.Configuration.GetSection("Redis"))
+	.ValidateDataAnnotations()
+	.ValidateOnStart();
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+	var settings = sp.GetRequiredService<IOptions<RedisSettings>>().Value;
+	return ConnectionMultiplexer.Connect(settings.ConnectionString);
+});
+
+builder.Services.AddSingleton(sp =>
+{
+	var multiplexer = sp.GetRequiredService<IConnectionMultiplexer>();
+	var redisSettings = sp.GetRequiredService<IOptions<RedisSettings>>().Value;
+	return new RedisService(multiplexer, redisSettings.Database);
+});
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
