@@ -1,5 +1,6 @@
 ﻿using Common.Shared.Dtos;
 using StockAPI.PaymentServices;
+using System.Diagnostics;
 using System.Net;
 
 namespace StockAPI.StockService;
@@ -20,6 +21,9 @@ public class StockService(PaymentService paymentService)
 	{
 		var productStocklist = GetProductStockList();
 		var stockStatus = new List<(int ProductId, bool IsStockExists)>();
+
+		var userId = Activity.Current?.GetBaggageItem("userId");
+		Activity.Current?.SetTag("userId", userId);
 
 		foreach (var item in requestDto.OrderItems)
 		{
