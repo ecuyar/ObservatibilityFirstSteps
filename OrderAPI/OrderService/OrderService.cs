@@ -17,6 +17,8 @@ namespace OrderAPI.OrderService
 			using var activity = ActivitySourceProvider.Source.StartActivity();
 			activity?.AddEvent(new("Sipariş süreci başladı."));
 
+			activity?.AddBaggage("userId", requestDto.UserId.ToString());
+
 			var jsonString = JsonSerializer.Serialize(requestDto);
 			await redisService.SetAsync($"{requestDto.UserId}/order", jsonString);
 
