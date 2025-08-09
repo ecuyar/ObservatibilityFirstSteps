@@ -8,10 +8,9 @@ namespace StockAPI.Controllers
 	public class StockController(StockService.StockService stockService) : ControllerBase
 	{
 		[HttpPost(nameof(CheckAndStartPayment))]
-		public IActionResult CheckAndStartPayment(CheckAndPaymentServiceRequestDto requestDto)
+		public async Task<IActionResult> CheckAndStartPayment(CheckAndPaymentServiceRequestDto requestDto)
 		{
-			var result = stockService.CheckAndPaymentService(requestDto);
-
+			var result = await stockService.CheckAndPaymentService(requestDto);
 			return new ObjectResult(result) { StatusCode = result.StatusCode };
 		}
 	}

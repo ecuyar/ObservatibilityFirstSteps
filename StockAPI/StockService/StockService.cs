@@ -1,43 +1,53 @@
 ﻿using Common.Shared.Dtos;
+using StockAPI.PaymentServices;
 using System.Net;
 
-namespace StockAPI.StockService
+namespace StockAPI.StockService;
+
+public class StockService(PaymentService paymentService)
 {
-	public class StockService
+	private static Dictionary<int, int> GetProductStockList()
 	{
-		private static Dictionary<int, int> GetProductStockList()
+		Dictionary<int, int> productList = [];
+		productList[0] = 10;
+		productList[1] = 25;
+		productList[2] = 30;
+		productList[3] = 43;
+		return productList;
+	}
+
+	public async Task<ResponseDto<CheckAndPaymentServiceResponseDto>> CheckAndPaymentService(CheckAndPaymentServiceRequestDto requestDto)
+	{
+		var productStocklist = GetProductStockList();
+		var stockStatus = new List<(int ProductId, bool IsStockExists)>();
+
+		foreach (var item in requestDto.OrderItems)
 		{
-			Dictionary<int, int> productList = [];
-			productList[0] = 10;
-			productList[1] = 25;
-			productList[2] = 30;
-			productList[3] = 43;
-			return productList;
+			var isExists = productStocklist.Any(x => x.Key == item.ProductId && x.Value - item.Count >= 0);
+
+			stockStatus.Add((item.ProductId, isExists));
 		}
 
-		public ResponseDto<CheckAndPaymentServiceResponseDto> CheckAndPaymentService(CheckAndPaymentServiceRequestDto requestDto)
+		if (stockStatus.Exists(x => x.IsStockExists == false))
 		{
-			var productStocklist = GetProductStockList();
-			var stockStatus = new List<(int ProductId, bool IsStockExists)>();
-
-			foreach (var item in requestDto.OrderItems)
-			{
-				var isExists = productStocklist.Any(x => x.Key == item.ProductId && x.Value - item.Count >= 0);
-
-				stockStatus.Add((item.ProductId, isExists));
-			}
-
-			if (stockStatus.Exists(x => x.IsStockExists == false))
-			{
-				return ResponseDto<CheckAndPaymentServiceResponseDto>
-					.Fail((int)HttpStatusCode.BadRequest, "Bazı ürünlerin stokları yetersiz.");
-			}
-
 			return ResponseDto<CheckAndPaymentServiceResponseDto>
-					.Success((int)HttpStatusCode.OK, new() { Description = "Stoklar ayrıldı." });
+				.Fail((int)HttpStatusCode.BadRequest, "Bazı ürünlerin stokları yetersiz.");
+		}
 
-			//payment süreci devam edecek
+		var (isSuccess, failMessage) = await paymentService.CreatePaymentProcess(new PaymentCreateRequestDto
+		{
+			OrderCode = requestDto.OrderCode,
+			TotalPrice = requestDto.OrderItems.Sum(x => x.UnitPrice)
+		});
+
+		if (!isSuccess)
+		{
+			return ResponseDto<CheckAndPaymentServiceResponseDto>
+				.Fail(HttpStatusCode.BadRequest.GetHashCode(), failMessage ?? string.Empty);
 
 		}
+
+		return ResponseDto<CheckAndPaymentServiceResponseDto>
+					.Success((int)HttpStatusCode.OK, new() { Description = "Stoklar ayrıldı." });
 	}
 }
