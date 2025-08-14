@@ -2,17 +2,36 @@ services:
   observatibilityfirststeps:
     container_name: "jaeger-container"
     ports:
-    - 4317:4317     #message over gRPC
-    - 4318:4318     #message over HTTP
-    - 16686:16686   #jaeger UI
+      - 4317:4317     #message over gRPC
+      - 4318:4318     #message over HTTP
+      - 16686:16686   #jaeger UI
   # observatibilityfirststeps-zipkin:
   #   container_name: "zipkin-container"
   #   ports:
   #   - 9411:9411
   redis:
     ports:
-    - 6379:6379
+      - 6379:6379
   rabbitmq:
     ports:
-    - 5672:5672
-    - 15672:15672
+      - 5672:5672
+      - 15672:15672
+  elasticsearch:
+    ports:
+      - 9200:9200
+    environment:
+      - xpack.security.enabled=false
+      - "discovery.type=single-node"
+      - ELASTIC_USERNAME= #you can give a username
+      - ELASTIC_PASSWORD= #you can give a password
+    volumes:
+      - elastic_db:/usr/share/elasticsearch/data
+  kibana:
+    ports:
+      - 5601:5601
+    environment:
+      - ELASTIC_SEARCH_HOSTS=http://elasticsearch/9200
+    depends_on:
+      - elasticsearch
+volumes:
+  elastic_db:
