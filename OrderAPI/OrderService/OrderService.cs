@@ -1,6 +1,4 @@
 ﻿using Common.Shared.Dtos;
-using Common.Shared.Events;
-using MassTransit;
 using OpenTelemetry.Shared;
 using OrderAPI.Context;
 using OrderAPI.RedisServices;
@@ -11,7 +9,7 @@ using System.Text.Json;
 
 namespace OrderAPI.OrderService
 {
-	public class OrderService(AppDbContext context, StockService stockService, RedisService redisService, IPublishEndpoint publishEndpoint)
+	public class OrderService(AppDbContext context, StockService stockService, RedisService redisService)
 	{
 		public async Task<ResponseDto<CreateOrderResponseDto>> CreateAsync(CreateOrderRequestDto requestDto)
 		{
@@ -25,9 +23,6 @@ namespace OrderAPI.OrderService
 			await redisService.SetAsync($"{requestDto.UserId}/order", jsonString);
 
 			var newOrder = await CreateOrderAsync(requestDto);
-
-			//publish order creeated message
-			await publishEndpoint.Publish(new OrderCreatedEvent { OrderCode = newOrder.OrderCode });
 
 			//check stock and continue
 			//TODO seperate stock checking and going to payment process

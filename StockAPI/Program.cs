@@ -1,6 +1,8 @@
+using MassTransit;
 using Microsoft.IO;
 using OpenTelemetry.Shared;
 using OpenTelemetry.Shared.Middlewares;
+using StockAPI.Consumers;
 using StockAPI.PaymentServices;
 using StockAPI.StockService;
 
@@ -20,6 +22,25 @@ builder.Services.AddSingleton<RecyclableMemoryStreamManager>();
 builder.Services.AddHttpClient<PaymentService>(options =>
 {
 	options.BaseAddress = new Uri(builder.Configuration.GetSection("ApiServices")["PaymentApi"]!);
+});
+
+builder.Services.AddMassTransit(x =>
+{
+	x.AddConsumer<OrderCreatedEventConsumer>();
+
+	x.UsingRabbitMq((context, config) =>
+	{
+		config.Host("localhost", "/", host =>
+		{
+			host.Username("guest");
+			host.Password("guest");
+		});
+
+		config.ReceiveEndpoint("stock.order-created-event.queue", e =>
+		{
+			e.ConfigureConsumer<OrderCreatedEventConsumer>(context);
+		});
+	});
 });
 
 var app = builder.Build();
