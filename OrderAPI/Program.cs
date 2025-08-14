@@ -8,6 +8,7 @@ using OrderAPI.OrderService;
 using OrderAPI.RedisServices;
 using OrderAPI.StockServices;
 using StackExchange.Redis;
+using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +48,18 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddHttpClient<StockService>(options =>
 {
 	options.BaseAddress = new Uri(builder.Configuration.GetSection("ApiServices:StockApi").Value!);
+});
+
+builder.Services.AddMassTransit(x =>
+{
+	x.UsingRabbitMq((context, config) =>
+	{
+		config.Host("localhost", "/", host =>
+		{
+			host.Username("guest");
+			host.Password("guest");
+		});
+	});
 });
 
 var app = builder.Build();
