@@ -1,3 +1,5 @@
+using Logging.Shared;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IO;
@@ -7,8 +9,8 @@ using OrderAPI.Context;
 using OrderAPI.OrderService;
 using OrderAPI.RedisServices;
 using OrderAPI.StockServices;
+using Serilog;
 using StackExchange.Redis;
-using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,6 +63,8 @@ builder.Services.AddMassTransit(x =>
 		});
 	});
 });
+
+builder.Host.UseSerilog(ElasticsearchLogging.ConfigureLogging);
 
 var app = builder.Build();
 
