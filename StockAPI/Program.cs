@@ -2,11 +2,13 @@ using MassTransit;
 using Microsoft.IO;
 using OpenTelemetry.Shared;
 using OpenTelemetry.Shared.Middlewares;
+using Serilog;
 using StockAPI.Consumers;
 using StockAPI.PaymentServices;
 using StockAPI.StockService;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog(Logging.Shared.ElasticsearchLogging.ConfigureLogging);
 
 // Add services to the container.
 builder.Services.AddScoped<StockService>();
