@@ -5,7 +5,9 @@ using System.Net;
 
 namespace StockAPI.StockService;
 
-public class StockService(PaymentService paymentService)
+public class StockService(
+	PaymentService paymentService,
+	ILogger<StockService> logger)
 {
 	private static Dictionary<int, int> GetProductStockList()
 	{
@@ -34,6 +36,7 @@ public class StockService(PaymentService paymentService)
 
 		if (stockStatus.Exists(x => x.IsStockExists == false))
 		{
+			logger.LogInformation("Bazı ürünlerin stokları yetersiz. {@orderCode}", requestDto.OrderCode);
 			return ResponseDto<CheckAndPaymentServiceResponseDto>
 				.Fail((int)HttpStatusCode.BadRequest, "Bazı ürünlerin stokları yetersiz.");
 		}
@@ -51,6 +54,7 @@ public class StockService(PaymentService paymentService)
 
 		}
 
+		logger.LogInformation("Stoklar ayrıldı. {@orderCode}", requestDto.OrderCode);
 		return ResponseDto<CheckAndPaymentServiceResponseDto>
 					.Success((int)HttpStatusCode.OK, new() { Description = "Stoklar ayrıldı." });
 	}

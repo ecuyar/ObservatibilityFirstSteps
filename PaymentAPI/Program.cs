@@ -1,8 +1,11 @@
+using Logging.Shared;
 using Microsoft.IO;
 using OpenTelemetry.Shared;
 using OpenTelemetry.Shared.Middlewares;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog(ElasticsearchLogging.ConfigureLogging);
 
 // Add services to the container.
 
@@ -23,6 +26,7 @@ if (app.Environment.IsDevelopment())
 }
 
 //custom middlewares
+app.UseOpenTelemetryTraceIdMiddleware();
 app.UseReadResponseMiddleware();
 
 app.UseHttpsRedirection();

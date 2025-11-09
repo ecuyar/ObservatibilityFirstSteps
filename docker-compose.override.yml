@@ -22,8 +22,10 @@ services:
     environment:
       - xpack.security.enabled=false
       - "discovery.type=single-node"
-      - ELASTIC_USERNAME= #you can give a username
-      - ELASTIC_PASSWORD= #you can give a password
+      - ES_JAVA_OPTS=-Xms2g -Xmx2g #min max ram usage limit
+      - mem-limit=4g #total ram. double of min max limit
+      - ELASTIC_USERNAME=elastic #you can give a username
+      - ELASTIC_PASSWORD=elasticpassword #you can give a password
     volumes:
       - elastic_db:/usr/share/elasticsearch/data
   kibana:
