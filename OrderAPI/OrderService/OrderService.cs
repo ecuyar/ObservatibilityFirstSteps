@@ -9,7 +9,11 @@ using System.Text.Json;
 
 namespace OrderAPI.OrderService
 {
-	public class OrderService(AppDbContext context, StockService stockService, RedisService redisService)
+	public class OrderService(
+		AppDbContext context,
+		StockService stockService,
+		RedisService redisService,
+		ILogger<OrderService> logger)
 	{
 		public async Task<ResponseDto<CreateOrderResponseDto>> CreateAsync(CreateOrderRequestDto requestDto)
 		{
@@ -23,9 +27,6 @@ namespace OrderAPI.OrderService
 			await redisService.SetAsync($"{requestDto.UserId}/order", jsonString);
 
 			var newOrder = await CreateOrderAsync(requestDto);
-
-			//check stock and continue
-			//TODO seperate stock checking and going to payment process
 			var stockRequest = new CheckAndPaymentServiceRequestDto
 			{
 				OrderCode = newOrder.OrderCode,
@@ -38,6 +39,7 @@ namespace OrderAPI.OrderService
 				return ResponseDto<CreateOrderResponseDto>.Fail(HttpStatusCode.InternalServerError.GetHashCode(), failMessage ?? []);
 			}
 
+			logger.LogInformation("Sipariş süreci tamamlandı. {@userId}", requestDto.UserId);
 			activity?.AddEvent(new("Sipariş süreci tamamlandı."));
 			return ResponseDto<CreateOrderResponseDto>.Success(HttpStatusCode.OK.GetHashCode(), new() { Id = newOrder.Id });
 		}

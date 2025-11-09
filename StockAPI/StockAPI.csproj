@@ -4,7 +4,6 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AnalysisLevel>latest-recommended</AnalysisLevel>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Logging.Shared\Logging.Shared.csproj" />
+    <ProjectReference Include="..\Logging.Shared\Logging.Shared.csproj" />
     <ProjectReference Include="..\Common.Shared\Common.Shared.csproj" />
     <ProjectReference Include="..\OpenTelemetry.Shared\OpenTelemetry.Shared.csproj" />
   </ItemGroup>

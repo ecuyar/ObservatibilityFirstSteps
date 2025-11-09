@@ -79,6 +79,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 //custom middleware
+app.UseOpenTelemetryTraceIdMiddleware();
 app.UseReadResponseMiddleware();
 
 app.UseAuthorization();
