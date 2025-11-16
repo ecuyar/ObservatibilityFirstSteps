@@ -1,3 +1,4 @@
+using Common.Shared.Middlewares;
 using Logging.Shared;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
@@ -81,6 +82,7 @@ app.UseHttpsRedirection();
 //custom middleware
 app.UseOpenTelemetryTraceIdMiddleware();
 app.UseReadResponseMiddleware();
+app.UseExceptionMiddleware();
 
 app.UseAuthorization();
 
