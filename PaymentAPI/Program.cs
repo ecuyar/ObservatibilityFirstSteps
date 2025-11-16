@@ -1,3 +1,4 @@
+using Common.Shared.Middlewares;
 using Logging.Shared;
 using Microsoft.IO;
 using OpenTelemetry.Shared;
@@ -28,6 +29,7 @@ if (app.Environment.IsDevelopment())
 //custom middlewares
 app.UseOpenTelemetryTraceIdMiddleware();
 app.UseReadResponseMiddleware();
+app.UseExceptionMiddleware();
 
 app.UseHttpsRedirection();
 
