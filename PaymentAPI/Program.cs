@@ -3,10 +3,10 @@ using Logging.Shared;
 using Microsoft.IO;
 using OpenTelemetry.Shared;
 using OpenTelemetry.Shared.Middlewares;
-using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Host.UseSerilog(ElasticsearchLogging.ConfigureLogging);
+//builder.Host.UseSerilog(Logging.Shared.Logging.ConfigureLogging);
+builder.AddOpenTelemetryLog();
 
 // Add services to the container.
 

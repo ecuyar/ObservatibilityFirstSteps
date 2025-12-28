@@ -10,7 +10,6 @@ using OrderAPI.Context;
 using OrderAPI.OrderService;
 using OrderAPI.RedisServices;
 using OrderAPI.StockServices;
-using Serilog;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -65,7 +64,8 @@ builder.Services.AddMassTransit(x =>
 	});
 });
 
-builder.Host.UseSerilog(ElasticsearchLogging.ConfigureLogging);
+//builder.Host.UseSerilog(Logging.Shared.Logging.ConfigureLogging);
+builder.AddOpenTelemetryLog();
 
 var app = builder.Build();
 
