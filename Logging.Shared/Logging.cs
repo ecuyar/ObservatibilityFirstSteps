@@ -3,14 +3,30 @@ using Elastic.Ingest.Elasticsearch;
 using Elastic.Ingest.Elasticsearch.DataStreams;
 using Elastic.Serilog.Sinks;
 using Elastic.Transport;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Resources;
 using Serilog;
 using Serilog.Exceptions;
 
 namespace Logging.Shared;
 
-public static class ElasticsearchLogging
+public static class Logging
 {
+	public static void AddOpenTelemetryLog(this WebApplicationBuilder builder)
+	{
+		builder.Logging.AddOpenTelemetry(config =>
+		{
+			var serviceName = builder.Configuration.GetSection("OpenTelemetry")["ServiceName"];
+			var serviceVersion = builder.Configuration.GetSection("OpenTelemetry")["Version"];
+
+			config.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName!, serviceVersion));
+			config.AddOtlpExporter();
+		});
+	}
+
 	public static Action<HostBuilderContext, LoggerConfiguration> ConfigureLogging => (builderContext, loggerConfiguration) =>
 	{
 		var environment = builderContext.HostingEnvironment;
