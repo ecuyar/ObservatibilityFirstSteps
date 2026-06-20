@@ -12,5 +12,7 @@
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
+    <None Include="newrelic-infra.yml" />
+    <None Include="otel-collector-config.yml" />
   </ItemGroup>
 </Project>
